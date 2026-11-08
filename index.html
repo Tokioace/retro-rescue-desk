@@ -1,53 +1,435 @@
+
 <!doctype html>
 <html lang="de">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#121620"><title>Retro Rescue Desk</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#10151d">
+<title>Retro Rescue Desk 2.0</title>
 <style>
-:root{color-scheme:dark;--bg:#121620;--panel:#202633;--line:#394251;--ink:#f5f5ed;--muted:#a8b3c5;--accent:#b7ef70;--pink:#ff93a6}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px system-ui,-apple-system,sans-serif}main{max-width:1050px;margin:auto;padding:20px 15px 70px}h1{font-size:28px;margin:0}h2{font-size:21px;margin:0 0 15px}small,p.muted{color:var(--muted)}header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:20px}.logo{color:var(--accent);font-weight:900;letter-spacing:2px}.tabs{display:flex;gap:7px;overflow:auto;padding:0 0 14px;margin-bottom:5px}button{cursor:pointer;border:1px solid var(--line);border-radius:9px;background:#303848;color:var(--ink);padding:11px 13px;font-weight:650;white-space:nowrap}button.primary{background:var(--accent);color:#132016;border:0}button.danger{color:var(--pink)}button.active{border-color:var(--accent);color:var(--accent)}section{display:none}section.active{display:block}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:17px;margin-bottom:14px}.number{font-size:29px;font-weight:800;color:var(--accent);margin-top:10px}.two{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}input,select,textarea{font:inherit;color:var(--ink);background:#111722;border:1px solid #4a5261;border-radius:9px;padding:12px;width:100%;min-width:0}textarea{min-height:76px}label{display:block;font-size:13px;color:var(--muted);margin-bottom:5px}.field{margin-bottom:12px}.item{border:1px solid var(--line);border-radius:12px;padding:15px;margin:10px 0;background:#1a202b}.itemhead{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.tag{display:inline-block;background:#334231;border-radius:99px;color:var(--accent);padding:4px 9px;font-size:12px}.details{color:var(--muted);font-size:13px;line-height:1.7;margin:8px 0}.actions{display:flex;gap:8px;flex-wrap:wrap}.empty{text-align:center;color:var(--muted);padding:30px 12px;border:1px dashed var(--line);border-radius:12px}.notice{color:#d2dac2;font-size:13px;line-height:1.55}hr{border:0;border-top:1px solid var(--line);margin:16px 0}.good{color:var(--accent)}.bad{color:var(--pink)}@media(max-width:620px){.grid,.two{grid-template-columns:1fr}h1{font-size:22px}.number{font-size:26px}header{align-items:flex-start}.panel{padding:14px}}
+:root{
+  color-scheme:dark;
+  --bg:#10151d;
+  --card:#212b37;
+  --border:#415162;
+  --green:#c5f57e;
+  --text:#f5f6ef;
+  --mute:#adbdca;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:15px system-ui}
+main{max-width:900px;margin:auto;padding:18px 14px 105px}
+header{margin-bottom:20px}
+header small{color:var(--green);letter-spacing:3px;font-weight:800}
+h1{font-size:27px;margin:5px 0}
+h2{font-size:20px;margin:3px 0 15px}
+p,small{color:var(--mute);line-height:1.5}
+.card{background:var(--card);border:1px solid var(--border);border-radius:15px;padding:16px;margin:0 0 12px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.number{font-size:25px;font-weight:800;color:var(--green);margin-top:8px}
+.field{margin:10px 0}
+label{display:block;font-size:13px;color:var(--mute);margin-bottom:5px}
+input,select,textarea{width:100%;background:#111c27;border:1px solid var(--border);border-radius:9px;color:var(--text);font:inherit;padding:11px;min-width:0}
+textarea{min-height:75px}
+button{font:inherit;font-weight:700;background:#334152;color:var(--text);border:1px solid var(--border);padding:10px 12px;border-radius:9px;cursor:pointer}
+button.primary{background:var(--green);color:#17221a;border-color:var(--green)}
+button.warn{color:#ffaab7}
+button.small{padding:7px 10px;font-size:12px}
+.row{display:flex;align-items:center;justify-content:space-between;gap:9px}
+.actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+.item{display:flex;gap:12px;border:1px solid var(--border);border-radius:11px;padding:12px;margin-bottom:9px}
+.item img,.placeholder{width:80px;height:88px;object-fit:cover;border-radius:9px;background:#334455;flex:none}
+.placeholder{display:grid;place-items:center;font-size:32px}
+.item>div:last-child{min-width:0;flex:1}
+.item h3{font-size:16px;margin:0 0 3px;overflow-wrap:anywhere}
+.info{font-size:12px;color:var(--mute);line-height:1.7}
+.good{color:var(--green);font-weight:800}
+.bad{color:#ffaab7;font-weight:800}
+.hidden{display:none!important}
+.view{display:none}
+.view.on{display:block}
+.nav{
+  position:fixed;bottom:0;left:0;right:0;
+  background:#17212df2;
+  border-top:1px solid var(--border);
+  display:grid;grid-template-columns:repeat(5,1fr);
+  padding:6px 3px calc(6px + env(safe-area-inset-bottom));
+  z-index:2;backdrop-filter:blur(12px);
+}
+.nav button{border:0;background:transparent;padding:6px 1px;font-size:10px;border-radius:9px}
+.nav button b{display:block;font-size:20px}
+.nav button.on{background:#364633;color:var(--green)}
+.empty{text-align:center;border:1px dashed var(--border);padding:22px;border-radius:10px;color:var(--mute)}
+.stack{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(min-width:720px){
+  .grid{grid-template-columns:repeat(4,1fr)}
+  .items{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .item{margin:0}
+  .nav{position:sticky;top:0;max-width:900px;margin:auto;border:1px solid var(--border);border-radius:14px}
+}
 </style>
 </head>
-<body><main>
-<header><div><div class="logo">◼ ◼ ◼ &nbsp; NOSTALGIA LAB</div><h1>RETRO RESCUE DESK</h1><small>Sammlung · Reparatur · Wiederverkauf</small></div><span class="tag">v1 · lokal</span></header>
-<nav class="tabs"><button data-tab="home" class="active">Dashboard</button><button data-tab="items">Geräte</button><button data-tab="repairs">Reparaturen</button><button data-tab="deal">Flohmarkt-Rechner</button><button data-tab="backup">Backup</button></nav>
-<section id="home" class="active"><div class="grid"><div class="panel"><small>Geräte</small><div id="count" class="number">0</div></div><div class="panel"><small>Investiert</small><div id="spent" class="number">0 €</div></div><div class="panel"><small>Erwarteter Überschuss*</small><div id="potential" class="number">0 €</div></div></div><div class="panel"><h2>Deine Retro-Werkstatt</h2><p>Erfasse Konsolen und Handhelds, dokumentiere Reparaturen und kalkuliere Ankäufe. Deine Daten bleiben in diesem Browser auf diesem Gerät.</p><p class="notice">*Potenzial = geschätzter Verkaufspreis minus Kaufpreis, Ersatzteile und erfasste Gebühren. Ohne Steuern, ungebuchte Kosten und Arbeitszeit. Schätzwerte sind keine Marktpreise.</p><button class="primary" onclick="show('items')">Erstes Gerät eintragen</button></div></section>
-<section id="items"><div class="panel"><h2>Gerät hinzufügen</h2><form id="itemForm"><div class="two"><div class="field"><label>Gerät / Modell *</label><input name="name" placeholder="z. B. Game Boy Color" required maxlength="100"></div><div class="field"><label>Zustand</label><select name="condition"><option>Defekt</option><option>Ungetestet</option><option>Funktioniert</option><option>Restauriert</option></select></div><div class="field"><label>Kaufpreis (€)</label><input name="buy" type="number" min="0" step="0.01" value="0"></div><div class="field"><label>Erwarteter Verkaufspreis (€)</label><input name="sale" type="number" min="0" step="0.01" value="0"></div></div><div class="field"><label>Notizen / Fehlerbild</label><textarea name="notes" placeholder="z. B. Display defekt, kein Ton"></textarea></div><button class="primary">Gerät speichern</button></form></div><div class="panel"><h2>Meine Geräte</h2><div id="itemList"></div></div></section>
-<section id="repairs"><div class="panel"><h2>Reparatur dokumentieren</h2><form id="repairForm"><div class="field"><label>Gerät *</label><select name="device" id="deviceSelect" required></select></div><div class="two"><div class="field"><label>Arbeit / Ersatzteil *</label><input name="job" required maxlength="140" placeholder="z. B. Kondensatoren getauscht"></div><div class="field"><label>Materialkosten (€)</label><input name="cost" type="number" step="0.01" min="0" value="0"></div></div><div class="field"><label>Arbeitszeit (Minuten, optional)</label><input name="minutes" type="number" min="0" step="1" value="0"></div><button class="primary">Reparatur hinzufügen</button></form></div><div class="panel"><h2>Reparaturhistorie</h2><div id="repairList"></div></div></section>
-<section id="deal"><div class="panel"><h2>Flohmarkt-Deal-Rechner</h2><p class="muted">Alle Angaben sind deine Annahmen. Ermittelt werden erwarteter Gewinn und maximal sinnvoller Ankaufspreis.</p><div class="two"><div class="field"><label>Erwarteter Verkaufspreis (€)</label><input id="dSale" type="number" min="0" step="0.01" value="100"></div><div class="field"><label>Geforderter Kaufpreis (€)</label><input id="dBuy" type="number" min="0" step="0.01" value="35"></div><div class="field"><label>Ersatzteile (€)</label><input id="dParts" type="number" min="0" step="0.01" value="15"></div><div class="field"><label>Versand / Verpackung (€)</label><input id="dShip" type="number" min="0" step="0.01" value="6"></div><div class="field"><label>Plattformgebühr (%)</label><input id="dFee" type="number" min="0" max="100" step="0.1" value="10"></div><div class="field"><label>Gewünschter Mindestgewinn (€)</label><input id="dTarget" type="number" min="0" step="0.01" value="20"></div><div class="field"><label>Arbeitszeit (Stunden)</label><input id="dHours" type="number" min="0" step="0.25" value="0"></div><div class="field"><label>Kalkulatorischer Stundensatz (€)</label><input id="dRate" type="number" min="0" step="0.5" value="0"></div></div><hr><div class="two"><div><small>Erwartetes Ergebnis</small><div id="dProfit" class="number">–</div></div><div><small>Max. Kaufpreis bei Zielgewinn</small><div id="dMax" class="number">–</div></div></div><p class="notice">Vor Steuern, Rücksendungen, weiteren Gebühren und sonstigen Risiken. Keine Empfehlung für eine Investition.</p></div></section>
-<section id="backup"><div class="panel"><h2>Daten sichern</h2><p>Die Daten liegen ausschließlich im lokalen Browserspeicher. Durch Löschen von Safari-Websitedaten oder Nutzung eines anderen Geräts können sie verloren gehen.</p><div class="actions"><button class="primary" id="exportBtn">Backup herunterladen (.json)</button><label style="display:inline-block"><span style="display:block;margin-bottom:8px">Backup wiederherstellen</span><input type="file" id="importFile" accept=".json,application/json"></label></div><p class="notice">Sichere regelmäßig eine Backup-Datei. Beim Import wird die bisherige Sammlung ersetzt.</p></div></section>
-<footer><small>RETRO RESCUE DESK · Offlinefähige Einzeldatei · Keine Accounts, Tracker oder externen Dienste.</small></footer>
+<body>
+<main>
+<header>
+<small>NOSTERGIA · RETRO TOOLS</small>
+<h1>RETRO RESCUE DESK</h1>
+<p style="margin:0">Sammlung · Reparatur · Wiederverkauf · v2</p>
+</header>
+
+<section id="home" class="view on">
+<div class="row">
+<h2>Dashboard</h2>
+<button class="primary small" onclick="edit()">+ Gerät</button>
+</div>
+<div class="grid">
+<div class="card"><small>Geräte</small><div class="number" id="count">0</div></div>
+<div class="card"><small>Investiert</small><div class="number" id="invest">0 €</div></div>
+<div class="card"><small>Reparaturen</small><div class="number" id="repcount">0</div></div>
+<div class="card"><small>Rohpotenzial*</small><div class="number" id="potential">0 €</div></div>
+</div>
+<div class="card">
+<h2>Zustand deiner Sammlung</h2>
+<div id="status"></div>
+</div>
+<div class="card">
+<h2>Letzte Reparaturen</h2>
+<div id="recent"></div>
+</div>
+<p>*Geschätzte Verkaufspreise minus Kauf- und Materialkosten, nicht abzüglich Arbeitszeit, Gebühren oder Steuern. Kein realisierter Gewinn.</p>
+</section>
+
+<section id="devices" class="view">
+<div class="row">
+<h2>Meine Geräte</h2>
+<button class="primary small" onclick="edit()">+ Neu</button>
+</div>
+<div id="editor" class="card hidden">
+<h2 id="formTitle">Gerät anlegen</h2>
+<form id="devForm">
+<input id="devId" type="hidden">
+<div class="stack">
+<div class="field">
+<label>Name *</label>
+<input id="devName" maxlength="90" required placeholder="z. B. Game Boy Color">
+</div>
+<div class="field">
+<label>Zustand</label>
+<select id="devState">
+<option>Defekt</option>
+<option>Ungetestet</option>
+<option>Funktioniert</option>
+<option>Restauriert</option>
+</select>
+</div>
+<div class="field">
+<label>Kaufpreis €</label>
+<input id="devBuy" type="number" min="0" step=".01" value="0">
+</div>
+<div class="field">
+<label>Verkaufsschätzung €</label>
+<input id="devSale" type="number" min="0" step=".01" value="0">
+</div>
+</div>
+<div class="field">
+<label>Fehler und Notizen</label>
+<textarea id="devNote"></textarea>
+</div>
+<div class="field">
+<label>Gerätefoto (optional)</label>
+<input type="file" id="devPhoto" accept="image/*">
+<small>Wird lokal verkleinert und gespeichert.</small>
+</div>
+<div class="actions">
+<button type="submit" class="primary">Speichern</button>
+<button type="button" onclick="closeEdit()">Abbrechen</button>
+<button type="button" id="clearPhoto" class="warn">Foto entfernen</button>
+</div>
+</form>
+</div>
+<div class="stack" style="margin-bottom:12px">
+<input type="search" id="search" placeholder="Geräte suchen">
+<select id="stateFilter">
+<option value="">Alle Zustände</option>
+<option>Defekt</option>
+<option>Ungetestet</option>
+<option>Funktioniert</option>
+<option>Restauriert</option>
+</select>
+</div>
+<div id="devList" class="items"></div>
+</section>
+
+<section id="workshop" class="view">
+<h2>Werkstatt</h2>
+<div class="card">
+<h2>Reparatur eintragen</h2>
+<form id="repairForm">
+<div class="field">
+<label>Gerät *</label>
+<select id="repDevice" required></select>
+</div>
+<div class="field">
+<label>Arbeit / Ersatzteil *</label>
+<input id="repJob" required maxlength="150" placeholder="z. B. Display getauscht">
+</div>
+<div class="stack">
+<div class="field">
+<label>Teilekosten €</label>
+<input id="repCost" type="number" min="0" step=".01" value="0">
+</div>
+<div class="field">
+<label>Arbeitszeit (Min.)</label>
+<input id="repTime" type="number" min="0" step="1" value="0">
+</div>
+</div>
+<button class="primary" type="submit">Reparatur speichern</button>
+</form>
+</div>
+<div class="card">
+<h2>Reparaturhistorie</h2>
+<div id="repList"></div>
+</div>
+</section>
+
+<section id="calc" class="view">
+<h2>Flohmarkt-Rechner</h2>
+<div class="card">
+<div class="stack">
+<div class="field"><label>Verkaufserlös €</label><input id="cSale" type="number" min="0" value="100"></div>
+<div class="field"><label>Ankauf €</label><input id="cBuy" type="number" min="0" value="35"></div>
+<div class="field"><label>Ersatzteile €</label><input id="cParts" type="number" min="0" value="15"></div>
+<div class="field"><label>Versand €</label><input id="cShip" type="number" min="0" value="6"></div>
+<div class="field"><label>Gebühren %</label><input id="cFee" type="number" min="0" max="100" value="10"></div>
+<div class="field"><label>Zielgewinn €</label><input id="cTarget" type="number" min="0" value="20"></div>
+<div class="field"><label>Arbeitsstunden</label><input id="cHours" type="number" min="0" step=".25" value="1"></div>
+<div class="field"><label>Stundensatz €</label><input id="cRate" type="number" min="0" value="15"></div>
+</div>
+<div class="grid">
+<div class="card"><small>Erwarteter Überschuss</small><div class="number" id="cProfit">–</div></div>
+<div class="card"><small>Max. Ankaufpreis</small><div class="number" id="cMax">–</div></div>
+</div>
+<p>Schätzung vor Steuern, weiteren Kosten und Ausfallrisiken.</p>
+</div>
+</section>
+
+<section id="backup" class="view">
+<h2>Backup</h2>
+<div class="card">
+<p>Deine Einträge und Fotos bleiben lokal auf deinem Gerät in Safari. Löscht Safari Websitedaten, können sie verschwinden.</p>
+<button class="primary" id="export">Backup speichern</button>
+<div class="field">
+<label>Backup importieren (ersetzt vorhandene Daten)</label>
+<input type="file" id="import" accept=".json,application/json">
+</div>
+<p>Bei jedem größeren Update zuerst ein Backup anlegen.</p>
+</div>
+</section>
 </main>
+
+<nav class="nav">
+<button data-go="home" class="on"><b>⌂</b>Start</button>
+<button data-go="devices"><b>▣</b>Geräte</button>
+<button data-go="workshop"><b>⚒</b>Werkstatt</button>
+<button data-go="calc"><b>▤</b>Rechner</button>
+<button data-go="backup"><b>⇩</b>Backup</button>
+</nav>
+
 <script>
-'use strict';
-const KEY='retro_rescue_desk_v1';
-let data={devices:[],repairs:[]};
-try{const v=JSON.parse(localStorage.getItem(KEY));if(v&&Array.isArray(v.devices)&&Array.isArray(v.repairs))data=v;}catch(e){console.warn('Backup loading failed',e);}
-const $=id=>document.getElementById(id);
-const eur=n=>new Intl.NumberFormat('de-DE',{style:'currency',currency:'EUR'}).format(Number(n)||0);
-const num=x=>Math.max(0,Number(x)||0);
-const safe=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const uid=()=>String(Date.now())+'-'+Math.random().toString(36).slice(2,7);
-function store(){localStorage.setItem(KEY,JSON.stringify(data));render();}
-function show(id){document.querySelectorAll('section').forEach(x=>x.classList.toggle('active',x.id===id));document.querySelectorAll('[data-tab]').forEach(x=>x.classList.toggle('active',x.dataset.tab===id));window.scrollTo({top:0,behavior:'smooth'});}
-document.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>show(b.dataset.tab)));
-function parts(id){return data.repairs.filter(r=>r.device===id).reduce((a,r)=>a+num(r.cost),0);}
-function calc(d){return num(d.sale)-num(d.buy)-parts(d.id);}
-function render(){
-$('count').textContent=data.devices.length;
-$('spent').textContent=eur(data.devices.reduce((s,d)=>s+num(d.buy)+parts(d.id),0));
-$('potential').textContent=eur(data.devices.reduce((s,d)=>s+calc(d),0));
-$('itemList').innerHTML=data.devices.length?data.devices.map(d=>'<article class="item"><div class="itemhead"><strong>'+safe(d.name)+'</strong><span class="tag">'+safe(d.condition)+'</span></div><div class="details">Einkauf '+eur(d.buy)+' · Teile '+eur(parts(d.id))+' · Zielverkauf '+eur(d.sale)+'<br>Grobe Differenz: <b>'+eur(calc(d))+'</b></div><div class="details">'+safe(d.notes)+'</div><button class="danger" onclick="removeDevice('+JSON.stringify(d.id)+')">Löschen</button></article>').join(''):'<div class="empty">Noch keine Geräte eingetragen.</div>';
-$('deviceSelect').innerHTML='<option value="">Gerät auswählen</option>'+data.devices.map(d=>'<option value="'+safe(d.id)+'">'+safe(d.name)+'</option>').join('');
-$('repairList').innerHTML=data.repairs.length?data.repairs.slice().reverse().map(r=>{const d=data.devices.find(d=>d.id===r.device);return '<article class="item"><strong>'+safe(d?.name||'Unbekanntes Gerät')+'</strong><div class="details">'+safe(r.job)+' · '+eur(r.cost)+' · '+num(r.minutes)+' Min.</div><button class="danger" onclick="removeRepair('+JSON.stringify(r.id)+')">Löschen</button></article>';}).join(''):'<div class="empty">Noch keine Reparaturen.</div>';
+const K='retro_rescue_desk_v1';
+const E=id=>document.getElementById(id);
+const money=n=>new Intl.NumberFormat('de-DE',{style:'currency',currency:'EUR'}).format(Number(n)||0);
+const num=v=>Math.max(0,Number(v)||0);
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const id=()=>Date.now()+'-'+Math.random().toString(36).slice(2);
+
+let db={devices:[],repairs:[]},photo='';
+try{
+  const s=JSON.parse(localStorage.getItem(K));
+  if(Array.isArray(s?.devices)&&Array.isArray(s?.repairs))db=s;
+}catch(e){}
+
+const find=i=>db.devices.find(d=>String(d.id)===String(i));
+const cost=i=>db.repairs.filter(r=>String(r.device)===String(i)).reduce((s,r)=>s+num(r.cost),0);
+const profit=d=>num(d.sale)-num(d.buy)-cost(d.id);
+
+function save(){
+  try{
+    localStorage.setItem(K,JSON.stringify(db));
+    render();
+    return true;
+  }catch(e){
+    alert('Speicher voll: Bitte Backup erstellen und Fotos reduzieren.');
+    return false;
+  }
 }
-$('itemForm').addEventListener('submit',e=>{e.preventDefault();const f=new FormData(e.currentTarget);const name=String(f.get('name')||'').trim();if(!name)return;data.devices.push({id:uid(),name:name,condition:String(f.get('condition')),buy:num(f.get('buy')),sale:num(f.get('sale')),notes:String(f.get('notes')||'')});e.currentTarget.reset();store();});
-$('repairForm').addEventListener('submit',e=>{e.preventDefault();const f=new FormData(e.currentTarget);if(!data.devices.some(d=>d.id===f.get('device')))return alert('Wähle ein Gerät aus.');const job=String(f.get('job')||'').trim();if(!job)return;data.repairs.push({id:uid(),device:String(f.get('device')),job:job,cost:num(f.get('cost')),minutes:num(f.get('minutes'))});e.currentTarget.reset();store();});
-function removeDevice(id){if(confirm('Gerät und alle seine Reparatureinträge löschen?')){data.devices=data.devices.filter(d=>d.id!==id);data.repairs=data.repairs.filter(r=>r.device!==id);store();}}
-function removeRepair(id){if(confirm('Reparatureintrag löschen?')){data.repairs=data.repairs.filter(r=>r.id!==id);store();}}
-function deal(){const sale=num($('dSale').value),buy=num($('dBuy').value),parts=num($('dParts').value),ship=num($('dShip').value),fee=num($('dFee').value)/100,target=num($('dTarget').value),labor=num($('dHours').value)*num($('dRate').value);const net=sale*(1-fee)-parts-ship-labor;$('dProfit').textContent=eur(net-buy);$('dProfit').className='number '+(net-buy>=0?'good':'bad');$('dMax').textContent=eur(Math.max(0,net-target));}
-document.querySelectorAll('#deal input').forEach(x=>x.addEventListener('input',deal));
-$('exportBtn').addEventListener('click',()=>{const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='retro-rescue-backup.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);});
-$('importFile').addEventListener('change',async e=>{const file=e.target.files?.[0];if(!file)return;try{const parsed=JSON.parse(await file.text());if(!parsed||!Array.isArray(parsed.devices)||!Array.isArray(parsed.repairs)||parsed.devices.length>10000||parsed.repairs.length>50000)throw Error('Ungültige Backupdatei');if(confirm('Bestehende Daten durch die Backupdatei ersetzen?')){data=parsed;store();alert('Backup importiert.');}}catch(err){alert('Import fehlgeschlagen: '+err.message);}e.target.value='';});
-render();deal();
-</script></body></html>
+
+function go(t){
+  document.querySelectorAll('.view').forEach(x=>x.classList.toggle('on',x.id===t));
+  document.querySelectorAll('[data-go]').forEach(x=>x.classList.toggle('on',x.dataset.go===t));
+  scrollTo(0,0);
+}
+document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>go(b.dataset.go));
+
+function render(){
+  E('count').textContent=db.devices.length;
+  E('invest').textContent=money(db.devices.reduce((s,d)=>s+num(d.buy)+cost(d.id),0));
+  E('repcount').textContent=db.repairs.length;
+  E('potential').textContent=money(db.devices.reduce((s,d)=>s+profit(d),0));
+  E('status').innerHTML=['Defekt','Ungetestet','Funktioniert','Restauriert'].map(s=>'<div class="row"><span>'+s+'</span><b>'+db.devices.filter(d=>d.condition===s).length+'</b></div>').join('');
+
+  const qs=E('search').value.toLowerCase(),st=E('stateFilter').value;
+  const filtered=db.devices.filter(d=>(!st||d.condition===st)&&(!qs||(d.name+' '+(d.notes||'')).toLowerCase().includes(qs)));
+
+  E('devList').innerHTML=filtered.length?filtered.map(d=>
+    '<div class="item">'+
+    (/^data:image\/(jpeg|png|webp);base64,/.test(d.image||'')?'<img src="'+d.image+'" alt="Gerätefoto">':'<div class="placeholder">🎮</div>')+
+    '<div><h3>'+esc(d.name)+'</h3>'+
+    '<div class="info">'+esc(d.condition)+' · Kauf '+money(d.buy)+'<br>Teile '+money(cost(d.id))+' · Verkaufsschätzung '+money(d.sale)+'</div>'+
+    '<div class="'+(profit(d)<0?'bad':'good')+'">Differenz '+money(profit(d))+'</div>'+
+    '<div class="actions"><button class="small" data-edit="'+esc(d.id)+'">Bearbeiten</button><button class="small warn" data-delete="'+esc(d.id)+'">Löschen</button></div></div></div>'
+  ).join(''):'<div class="empty">Keine Geräte gefunden.</div>';
+
+  E('repDevice').innerHTML='<option value="">Gerät wählen</option>'+db.devices.map(d=>'<option value="'+esc(d.id)+'">'+esc(d.name)+'</option>').join('');
+
+  E('repList').innerHTML=db.repairs.length?db.repairs.slice().reverse().map(r=>
+    '<div class="item"><div><h3>'+esc(r.job)+'</h3><div class="info">'+esc(find(r.device)?.name||'Gerät')+
+    ' · '+money(r.cost)+' · '+num(r.minutes)+' Min.</div><button class="small warn" data-rdelete="'+esc(r.id)+'">Löschen</button></div></div>'
+  ).join(''):'<div class="empty">Noch keine Reparaturen.</div>';
+
+  E('recent').innerHTML=db.repairs.length?db.repairs.slice(-3).reverse().map(r=>'<div class="info">'+esc(r.job)+' · '+money(r.cost)+'</div>').join(''):'<p>Keine Reparaturen eingetragen.</p>';
+}
+
+function edit(i){
+  const d=i?find(i):null;
+  E('devForm').reset();
+  E('devId').value=d?.id||'';
+  E('devName').value=d?.name||'';
+  E('devState').value=d?.condition||'Defekt';
+  E('devBuy').value=num(d?.buy);
+  E('devSale').value=num(d?.sale);
+  E('devNote').value=d?.notes||'';
+  photo=d?.image||'';
+  E('formTitle').textContent=d?'Gerät bearbeiten':'Gerät hinzufügen';
+  E('editor').classList.remove('hidden');
+  go('devices');
+  E('editor').scrollIntoView();
+}
+function closeEdit(){E('editor').classList.add('hidden')}
+
+E('clearPhoto').onclick=()=>{
+  photo='';
+  E('devPhoto').value='';
+};
+
+async function shrink(f){
+  if(!f.type.startsWith('image/')||f.size>12e6)throw Error('Bitte ein Foto unter 12 MB wählen');
+  return await new Promise((res,rej)=>{
+    const u=URL.createObjectURL(f),im=new Image;
+    im.onload=()=>{
+      let scale=Math.min(1,450/Math.max(im.width,im.height)),c=document.createElement('canvas');
+      c.width=Math.round(im.width*scale);
+      c.height=Math.round(im.height*scale);
+      c.getContext('2d').drawImage(im,0,0,c.width,c.height);
+      URL.revokeObjectURL(u);
+      res(c.toDataURL('image/jpeg',.58));
+    };
+    im.onerror=()=>{
+      URL.revokeObjectURL(u);
+      rej(Error('Foto unlesbar'));
+    };
+    im.src=u;
+  });
+}
+
+E('devForm').onsubmit=async e=>{
+  e.preventDefault();
+  try{
+    if(E('devPhoto').files[0])photo=await shrink(E('devPhoto').files[0]);
+    const old=find(E('devId').value);
+    const d={
+      ...(old||{}),
+      id:old?.id||id(),
+      name:E('devName').value.trim(),
+      condition:E('devState').value,
+      buy:num(E('devBuy').value),
+      sale:num(E('devSale').value),
+      notes:E('devNote').value,
+      image:photo
+    };
+    if(!d.name)return;
+    if(old)db.devices[db.devices.indexOf(old)]=d;
+    else db.devices.push(d);
+    if(save())closeEdit();
+  }catch(err){alert(err.message)}
+};
+
+E('repairForm').onsubmit=e=>{
+  e.preventDefault();
+  if(!find(E('repDevice').value))return alert('Gerät auswählen');
+  db.repairs.push({
+    id:id(),
+    device:E('repDevice').value,
+    job:E('repJob').value.trim(),
+    cost:num(E('repCost').value),
+    minutes:num(E('repTime').value)
+  });
+  if(save())e.target.reset();
+};
+
+document.addEventListener('click',e=>{
+  let a=e.target.closest('[data-edit]'),
+      b=e.target.closest('[data-delete]'),
+      c=e.target.closest('[data-rdelete]');
+  if(a)edit(a.dataset.edit);
+  if(b&&confirm('Gerät und Reparaturen löschen?')){
+    db.devices=db.devices.filter(d=>String(d.id)!==b.dataset.delete);
+    db.repairs=db.repairs.filter(r=>String(r.device)!==b.dataset.delete);
+    save();
+  }
+  if(c&&confirm('Reparatur löschen?')){
+    db.repairs=db.repairs.filter(r=>String(r.id)!==c.dataset.rdelete);
+    save();
+  }
+});
+
+E('search').oninput=render;
+E('stateFilter').onchange=render;
+
+function calc(){
+  const v=x=>num(E(x).value);
+  const net=v('cSale')*(1-Math.min(100,v('cFee'))/100)-v('cParts')-v('cShip')-v('cHours')*v('cRate');
+  E('cProfit').textContent=money(net-v('cBuy'));
+  E('cMax').textContent=money(net-v('cTarget'));
+}
+document.querySelectorAll('#calc input').forEach(x=>x.oninput=calc);
+
+E('export').onclick=()=>{
+  let u=URL.createObjectURL(new Blob([JSON.stringify(db)],{type:'application/json'}));
+  let a=document.createElement('a');
+  a.href=u;
+  a.download='retro-rescue-backup.json';
+  a.click();
+  setTimeout(()=>URL.revokeObjectURL(u),1000);
+};
+
+E('import').onchange=async e=>{
+  try{
+    const f=e.target.files[0];
+    if(!f)return;
+    if(f.size>8e6)throw Error('Backup zu groß');
+    const x=JSON.parse(await f.text());
+    if(!Array.isArray(x.devices)||!Array.isArray(x.repairs)||x.devices.length>2000||x.repairs.length>10000)throw Error('Kein gültiges Backup');
+    if(confirm('Alle vorhandenen Daten ersetzen?')){
+      db=x;
+      save();
+    }
+  }catch(err){alert(err.message)}
+  e.target.value='';
+};
+
+render();
+calc();
+</script>
+</body>
+</html>
